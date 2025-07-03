@@ -1,0 +1,46 @@
+  version: "3.8"
+
+  services:
+    postgres:
+      image: postgres:15
+      container_name: keycloak_db
+      environment:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      networks:
+        - ctu_net
+
+    keycloak:
+      image: quay.io/keycloak/keycloak:20.0.3
+      container_name: keycloak
+      environment:
+        KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+        KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+        KC_DB: ${KC_DB}
+        KC_DB_URL_HOST: ${KC_DB_URL_HOST}
+        KC_DB_URL_DATABASE: ${KC_DB_URL_DATABASE}
+        KC_DB_USERNAME: ${KC_DB_USERNAME}
+        KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+        KC_HOSTNAME_STRICT: "false"
+        KC_HOSTNAME_STRICT_HTTPS: "false"
+      command: start --http-enabled=true --import-realm
+      volumes:
+        - ./conf/keycloak/realm.json:/opt/keycloak/data/import/realm.json
+      ports:
+        - "8080:8080"
+      depends_on:
+        - postgres
+      networks:
+        - ctu_net
+
+  volumes:
+    postgres_data:
+
+  networks:
+    ctu_net:
+      name: ctu_net
+      attachable: true
+      driver: bridge

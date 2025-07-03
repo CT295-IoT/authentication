@@ -1,0 +1,24 @@
+{
+  "realm": "myrealm",
+  "enabled": true,
+  "users": [
+    {
+      "username": "user1",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password"
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "myclient",
+      "enabled": true,
+      "redirectUris": ["*"],
+      "publicClient": true
+    }
+  ]
+}
